@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "673682679424",
+    "firebase_url": "https://prinsorder-default-rtdb.firebaseio.com",
+    "project_id": "prinsorder",
+    "storage_bucket": "prinsorder.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673682679424:android:c9cc7dd4c8f58d0c282865",
+        "android_client_info": {
+          "package_name": "chukstem.prinsorder"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673682679424-d0bq61qf57rb83m00mibgj69fiqrgq8o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZR6To8geRUDapNdBd6TakWVK-ktSV0bk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673682679424-d0bq61qf57rb83m00mibgj69fiqrgq8o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
