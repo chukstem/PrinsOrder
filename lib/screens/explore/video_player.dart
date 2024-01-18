@@ -19,6 +19,7 @@ class _VideoPlayerLibState extends State<VideoPlayerLib> {
     super.initState();
 
     controller = new CachedVideoPlayerPlusController.networkUrl(
+      //use widget.url for server file
       Uri.parse('https://download.samplelib.com/mp4/sample-5s.mp4'),
       httpHeaders: {
         'Connection': 'keep-alive',
