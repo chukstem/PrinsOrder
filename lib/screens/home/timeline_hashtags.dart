@@ -3,12 +3,12 @@ import 'dart:convert';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:crypto_app/models/timeline_hashtags_model.dart';
+import 'package:chukstem/models/timeline_hashtags_model.dart';
 import 'package:easy_load_more/easy_load_more.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:crypto_app/constants.dart';
+import 'package:chukstem/constants.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';

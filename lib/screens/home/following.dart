@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:crypto_app/models/user_model.dart';
+import 'package:chukstem/models/user_model.dart';
 import 'package:easy_load_more/easy_load_more.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

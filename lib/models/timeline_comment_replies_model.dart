@@ -1,6 +1,6 @@
-import 'package:crypto_app/models/timeline_images_model.dart';
-import 'package:crypto_app/models/timeline_media_model.dart';
-import 'package:crypto_app/models/user_model.dart';
+import 'package:chukstem/models/timeline_images_model.dart';
+import 'package:chukstem/models/timeline_media_model.dart';
+import 'package:chukstem/models/user_model.dart';
 
 class TimelineCommentRepliesModel {
   String id;

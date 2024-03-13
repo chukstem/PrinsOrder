@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:crypto_app/screens/home/post_timeline.dart';
-import 'package:crypto_app/screens/home/timeline.dart';
+import 'package:chukstem/screens/home/post_timeline.dart';
+import 'package:chukstem/screens/home/timeline.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

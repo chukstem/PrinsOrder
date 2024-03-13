@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:crypto_app/constants.dart';
+import 'package:chukstem/constants.dart';
 import 'package:flutter/material.dart';
 import '../../../models/transactions_model.dart';
 import '../../widgets/appbar.dart';

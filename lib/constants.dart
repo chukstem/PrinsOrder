@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:crypto_app/size_config.dart';
+import 'package:chukstem/size_config.dart';
 
 const List<Color> indicators = [
   Color(0xffFED2C7),

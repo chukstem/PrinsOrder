@@ -7,7 +7,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:crypto_app/constants.dart';
+import 'package:chukstem/constants.dart';
 import 'package:toast/toast.dart';
 
 import '../../components/coustom_bottom_nav_bar.dart';

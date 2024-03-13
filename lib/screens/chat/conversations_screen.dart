@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:crypto_app/helper/networklayer.dart';
-import 'package:crypto_app/models/conversations_model.dart';
+import 'package:chukstem/helper/networklayer.dart';
+import 'package:chukstem/models/conversations_model.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -1,6 +1,6 @@
-import 'package:crypto_app/models/timeline_hashtags_model.dart';
-import 'package:crypto_app/models/timeline_model.dart';
-import 'package:crypto_app/models/user_model.dart';
+import 'package:chukstem/models/timeline_hashtags_model.dart';
+import 'package:chukstem/models/timeline_model.dart';
+import 'package:chukstem/models/user_model.dart';
 
 class ExploreModel {
   List<TimelineModel> timeline;

@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:crypto_app/constants.dart';
-import 'package:crypto_app/screens/splash/splash_screen.dart';
-import 'package:crypto_app/screens/splash/welcome.dart';
+import 'package:chukstem/constants.dart';
+import 'package:chukstem/screens/splash/splash_screen.dart';
+import 'package:chukstem/screens/splash/welcome.dart';
 
 import '../../components/coustom_bottom_nav_bar.dart';
 

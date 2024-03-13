@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:crypto_app/models/timeline_model.dart';
-import 'package:crypto_app/screens/explore/video_player.dart';
-import 'package:crypto_app/screens/explore/view_replies_screen.dart';
+import 'package:chukstem/models/timeline_model.dart';
+import 'package:chukstem/screens/explore/video_player.dart';
+import 'package:chukstem/screens/explore/view_replies_screen.dart';
 import 'package:easy_load_more/easy_load_more.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:crypto_app/constants.dart';
+import 'package:chukstem/constants.dart';
 
 import '../size_config.dart';
 

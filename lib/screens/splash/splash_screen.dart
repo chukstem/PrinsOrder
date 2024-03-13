@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:crypto_app/constants.dart';
-import 'package:crypto_app/screens/splash/components/body.dart';
-import 'package:crypto_app/size_config.dart';
+import 'package:chukstem/constants.dart';
+import 'package:chukstem/screens/splash/components/body.dart';
+import 'package:chukstem/size_config.dart';
 
 class SplashScreen extends StatelessWidget {
   static String routeName = "/splash";

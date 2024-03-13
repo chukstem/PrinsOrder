@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:crypto_app/constants.dart';
-import 'package:crypto_app/screens/sign_up/sign_up_screen.dart';
+import 'package:chukstem/constants.dart';
+import 'package:chukstem/screens/sign_up/sign_up_screen.dart';
 
 import '../../size_config.dart';
 import '../sign_in/sign_in_screen.dart';

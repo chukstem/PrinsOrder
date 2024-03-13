@@ -8,7 +8,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:crypto_app/screens/splash/welcome.dart';
+import 'package:chukstem/screens/splash/welcome.dart';
 import 'package:toast/toast.dart'; 
 import '../../components/coustom_bottom_nav_bar.dart';
 import '../../constants.dart';

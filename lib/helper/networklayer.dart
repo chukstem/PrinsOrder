@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:crypto_app/models/explore_model.dart';
-import 'package:crypto_app/models/timeline_comment_replies_model.dart';
+import 'package:chukstem/models/explore_model.dart';
+import 'package:chukstem/models/timeline_comment_replies_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';

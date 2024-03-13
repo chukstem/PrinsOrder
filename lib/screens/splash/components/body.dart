@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:crypto_app/constants.dart';
-import 'package:crypto_app/screens/sign_in/sign_in_screen.dart';
-import 'package:crypto_app/screens/splash/welcome.dart';
-import 'package:crypto_app/size_config.dart';
+import 'package:chukstem/constants.dart';
+import 'package:chukstem/screens/sign_in/sign_in_screen.dart';
+import 'package:chukstem/screens/splash/welcome.dart';
+import 'package:chukstem/size_config.dart';
 
 // This is the best practice
 import '../components/splash_content.dart';

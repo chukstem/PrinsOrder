@@ -7,7 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:crypto_app/models/timeline_images_model.dart';
+import 'package:chukstem/models/timeline_images_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';

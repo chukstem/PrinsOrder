@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:crypto_app/components/default_button.dart';
-import 'package:crypto_app/size_config.dart';
+import 'package:chukstem/components/default_button.dart';
+import 'package:chukstem/size_config.dart';
 
 import '../../../constants.dart';
 import 'dart:convert';

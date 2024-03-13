@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
-import 'package:crypto_app/constants.dart';
-import 'package:crypto_app/helper/networklayer.dart';
+import 'package:chukstem/constants.dart';
+import 'package:chukstem/helper/networklayer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';

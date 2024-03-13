@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:pin_code_view/pin_code_view.dart';
-import 'package:crypto_app/screens/chat/admin_screen.dart';
+import 'package:chukstem/screens/chat/admin_screen.dart';
 import '../../../models/transactions_model.dart'; 
 import '../../components/get_products.dart';
 import '../../constants.dart';

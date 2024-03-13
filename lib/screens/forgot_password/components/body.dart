@@ -2,11 +2,11 @@ import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:crypto_app/components/custom_surfix_icon.dart';
-import 'package:crypto_app/components/default_button.dart';
-import 'package:crypto_app/components/form_error.dart';
-import 'package:crypto_app/components/no_account_text.dart';
-import 'package:crypto_app/size_config.dart';
+import 'package:chukstem/components/custom_surfix_icon.dart';
+import 'package:chukstem/components/default_button.dart';
+import 'package:chukstem/components/form_error.dart';
+import 'package:chukstem/components/no_account_text.dart';
+import 'package:chukstem/size_config.dart';
 
 import '../../../constants.dart';
 import 'dart:convert';

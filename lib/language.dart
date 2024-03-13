@@ -1,4 +1,4 @@
-import 'package:crypto_app/strings.dart';
+import 'package:chukstem/strings.dart';
 class Language {
   static String explore = 'Explore';
   static String p2p = 'P2P';

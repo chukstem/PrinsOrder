@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:crypto_app/routes.dart';
-import 'package:crypto_app/screens/splash/splash.dart';
-import 'package:crypto_app/services/push_notification_service.dart';
-import 'package:crypto_app/strings.dart';
-import 'package:crypto_app/theme.dart';
+import 'package:chukstem/routes.dart';
+import 'package:chukstem/screens/splash/splash.dart';
+import 'package:chukstem/services/push_notification_service.dart';
+import 'package:chukstem/strings.dart';
+import 'package:chukstem/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 void main() async {

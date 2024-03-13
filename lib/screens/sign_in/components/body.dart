@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:crypto_app/components/no_account_text.dart';
-import 'package:crypto_app/components/socal_card.dart';
+import 'package:chukstem/components/no_account_text.dart';
+import 'package:chukstem/components/socal_card.dart';
 import '../../../size_config.dart';
 import 'sign_form.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_indicator/loading_indicator.dart';
-import 'package:crypto_app/constants.dart';
+import 'package:chukstem/constants.dart';
 
 class AppIndicator extends StatelessWidget {
   const AppIndicator({Key? key}) : super(key: key);

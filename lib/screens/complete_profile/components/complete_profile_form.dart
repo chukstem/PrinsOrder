@@ -1,10 +1,10 @@
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:crypto_app/components/custom_surfix_icon.dart';
-import 'package:crypto_app/components/default_button.dart';
-import 'package:crypto_app/components/form_error.dart';
-import 'package:crypto_app/screens/otp/otp_screen.dart';
+import 'package:chukstem/components/custom_surfix_icon.dart';
+import 'package:chukstem/components/default_button.dart';
+import 'package:chukstem/components/form_error.dart';
+import 'package:chukstem/screens/otp/otp_screen.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 import '../../../strings.dart';

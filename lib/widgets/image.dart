@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:crypto_app/widgets/snackbar.dart';
+import 'package:chukstem/widgets/snackbar.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
