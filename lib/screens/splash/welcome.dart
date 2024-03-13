@@ -56,7 +56,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0), bottomRight: Radius.circular(20.0), bottomLeft: Radius.circular(20.0)),
                       color: Colors.white
                   ),
-                  child: OutlinedButton(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0,
+                      backgroundColor: Colors.white,
+                      side: BorderSide(width: 0, color: Colors.white),
+                      minimumSize: const Size.fromHeight(
+                          50), // fromHeight use double.infinity as width and 40 is the height
+                    ),
                     child: Text(
                       'Create New Account',
                       style: TextStyle(

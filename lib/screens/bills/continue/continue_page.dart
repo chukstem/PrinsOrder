@@ -8,7 +8,6 @@ import '../../../size_config.dart';
 import '../../../strings.dart';
 import '../../../widgets/appbar.dart';
 import '../../../widgets/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../widgets/pin_form.dart';
 
@@ -435,15 +434,5 @@ class _ConfirmTransactionState extends State<ConfirmTransaction> {
     );
   }
 
-  Future<void> _openLink(String link) async {
-    Uri url=Uri.parse(link);
-    if (!await launchUrl(
-      url,
-      mode: LaunchMode.inAppWebView,
-      webViewConfiguration: WebViewConfiguration(
-          headers: <String, String>{'my_header_key': 'my_header_value'}),
-    )) {
-      throw Exception('Could not launch $url');
-    }
-  }
+
 }

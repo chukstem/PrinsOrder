@@ -74,12 +74,7 @@ class _Savings extends State<Savings> {
         error=true;
         msg="Amount is empty";
       });
-    }else if(int.parse(amount)<100){
-      setState(() {
-      error=true;
-      msg="Minimum Amount is N100";
-      });
-    }else {
+    } else {
       String apiurl = Strings.url+"/pay_with_wallet";
       success=false;
       QuickAlert.show(
@@ -91,7 +86,7 @@ class _Savings extends State<Savings> {
       var response = null;
       Map data = {
         'username': username,
-        'reference': Uuid().v4(),
+        'reference': username!+'_'+Uuid().v4()+'_${DateTime.now().millisecondsSinceEpoch/1000}',
         'amount': amount
       };
 
@@ -159,6 +154,95 @@ class _Savings extends State<Savings> {
   }
 
 
+  withdrawNow() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var username = prefs.getString("username");
+    var token = prefs.getString("token");
+    if(amount.isEmpty){
+      setState(() {
+        error=true;
+        msg="Amount is empty";
+      });
+    }else {
+      String apiurl = Strings.url+"/withdraw_saving";
+      success=false;
+      QuickAlert.show(
+        context: context,
+        type: QuickAlertType.loading,
+        title: 'Loading',
+        text: 'Processing request...',
+      );
+      var response = null;
+      Map data = {
+        'username': username,
+        'reference': username!+'_'+Uuid().v4()+'_${DateTime.now().millisecondsSinceEpoch/1000}',
+        'amount': amount
+      };
+
+      var body = json.encode(data);
+      try {
+        response = await http.post(Uri.parse(apiurl),
+            headers: {
+              "Content-Type": "application/json",
+              "Authentication": "Bearer $token"},
+            body: body
+        );
+
+        if (response != null && response.statusCode == 200) {
+          try {
+            var jsondata = json.decode(response.body);
+            if (jsondata["status"] != null &&
+                jsondata["status"].toString().contains("success")) {
+              setState(() {
+                error=false;
+                success=true;
+                msg=jsondata["response_message"];
+              });
+            } else {
+              setState(() {
+                error=true;
+                msg=jsondata["response_message"];
+              });
+              Navigator.pop(context);
+            }
+          } catch (e) {
+            setState(() {
+              error=true;
+              msg="Network connection error.";
+            });
+            Navigator.pop(context);
+          }
+        } else {
+          setState(() {
+            error=true;
+            msg="Network connection error";
+          });
+          Navigator.pop(context);
+        }
+      } catch (e) {
+        setState(() {
+          error=true;
+          msg="Network connection error.";
+        });
+        Navigator.pop(context);
+      }
+    }
+
+    setState(() {
+      showprogress=false;
+    });
+    if(error!) {
+      Snackbar().show(context, ContentType.failure, "Error!", msg!);
+    }else{
+      Navigator.pop(context);
+      Navigator.pop(context);
+      Snackbar().show(context, ContentType.success, "Success!", msg!);
+      fetchList();
+      fetchQuery();
+    }
+  }
+
+
   fetchQuery() async {
     try {
       var res = await getQuery();
@@ -186,12 +270,7 @@ class _Savings extends State<Savings> {
         error=true;
         msg="Voucher code is empty";
       });
-      }else if(code.length<10){
-        setState(() {
-        error=true;
-        msg="Invalid Voucher Code";
-        });
-    }else {
+      } else {
       String apiurl = Strings.url+"/redeem_voucher";
       success=false;
       QuickAlert.show(
@@ -203,7 +282,7 @@ class _Savings extends State<Savings> {
       var response = null;
       Map data = {
         'username': username,
-        'reference': Uuid().v4(),
+        'reference': username!+'_'+Uuid().v4()+'_${DateTime.now().millisecondsSinceEpoch/1000}',
         'code': code
       };
 
@@ -304,7 +383,7 @@ class _Savings extends State<Savings> {
             Container(
               height: 100,
               decoration: BoxDecoration(
-                color: kPrimaryColor,
+                color: kPrimary,
                 borderRadius: BorderRadius.only(bottomLeft: Radius.circular(30.0), bottomRight: Radius.circular(30.0)),
               ),
               padding: EdgeInsets.only(top: 20),
@@ -325,15 +404,8 @@ class _Savings extends State<Savings> {
             padding: EdgeInsets.all(10),
             //color: kPrimary,
             decoration: BoxDecoration(
-              color: Colors.orange,
+              color: Colors.blueGrey,
               borderRadius: circularRadius(AppRadius.border12),
-              boxShadow: const [
-                BoxShadow(
-                    color: Colors.grey,
-                    offset: Offset(1.0, 5.0),
-                    blurRadius: 10,
-                    spreadRadius: 3)
-              ],
             ),
           child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -347,7 +419,7 @@ class _Savings extends State<Savings> {
                 children: <Widget>[
                   Text(
                   "Saving Balance:",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                   Container(
                     margin: EdgeInsets.only(right: 20),
@@ -393,52 +465,73 @@ class _Savings extends State<Savings> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Container(
-                    width: MediaQuery.of(context).size.width*0.40,
-                    padding: const EdgeInsets.only(
-                        top: 10, right: 5, left: 5, bottom: 10),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: kPrimary,
-                        minimumSize: const Size.fromHeight(
-                            50), // fromHeight use double.infinity as width and 40 is the height
-                      ),
-                      child: Text(
-                        'Save Now',
+                InkWell(
+                  child: Container(
+                    width: MediaQuery.of(context).size.width*0.28,
+                    padding: const EdgeInsets.all(10),
+                    height: 40,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.orange),
+                    child: Center(
+                    child: Text(
+                        'Save',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 16, ),
+                          fontSize: 12, ),
                       ),
-                      onPressed: (){
-                        _Method(context);
-                      },
                     )),
-                Container(
-                    width: MediaQuery.of(context).size.width*0.40,
-                    padding: const EdgeInsets.only(
-                        top: 10, right: 5, left: 5, bottom: 10),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: kPrimary,
-                        minimumSize: const Size.fromHeight(
-                            50), // fromHeight use double.infinity as width and 40 is the height
-                      ),
+                    onTap: (){
+                      setState(() {
+                        error=false;
+                        msg="";
+                      });
+                      _Method(context);
+                    }),
+                InkWell(
+                    child: Container(
+                    width: MediaQuery.of(context).size.width*0.28,
+                    height: 40,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white60),
+                    child: Center(
                       child: Text(
-                        history_button ? 'Hide' : 'History',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16, ),
+                          'Withdraw',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12, ),
+                        ),
                       ),
-                      onPressed: (){
-                        setState(() {
-                          if (history_button == true) {
-                            history_button = false;
-                          } else {
-                            history_button = true;
-                          }
-                        });
-                      },
-                    )),
+                    ),
+                  onTap: (){
+                    setState(() {
+                      error=false;
+                      msg="";
+                    });
+                    _Withdraw(context);
+                  },),
+                InkWell(
+                    child: Container(
+                    width: MediaQuery.of(context).size.width*0.28,
+                    padding: const EdgeInsets.all(10),
+                    height: 40,
+                    decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white60),
+                    child: Center(
+                      child: Text(
+                          history_button ? 'Hide' : 'History',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12, ),
+                        ),
+                      ),
+                    ),
+                  onTap: (){
+                    setState(() {
+                      if (history_button == true) {
+                        history_button = false;
+                      } else {
+                        history_button = true;
+                      }
+                    });
+                  },),
               ],
             ),
            ]),
@@ -592,25 +685,25 @@ class _Savings extends State<Savings> {
                     ),
                 SizedBox(height: 7,),
                 Wrap(
-                 alignment: WrapAlignment.spaceBetween,
+                 alignment: WrapAlignment.spaceEvenly,
                   children: <Widget>[
                     Text(
                       obj.time,
                       textAlign: TextAlign.start,
                       style: const TextStyle(
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                         color: Colors.black,
                         fontWeight: FontWeight.normal,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),
-                    SizedBox(width: 100),
+                    SizedBox(width: 10),
                     Text(
                       "₦"+obj.amount,
                       textAlign: TextAlign.start,
                       style: const TextStyle(
-                        fontSize: 14.0,
+                        fontSize: 12.0,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                       ),
@@ -700,7 +793,7 @@ class _Savings extends State<Savings> {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            "Saving Method",
+                            obj.status=="Withdraw"? "Withdraw Method" : "Saving Method",
                             textAlign: TextAlign.start,
                             style: const TextStyle(
                               fontSize: 12.0,
@@ -1085,5 +1178,122 @@ class _Savings extends State<Savings> {
         context: context);
   }
 
+
+
+  void _Withdraw(context) {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: (BuildContext context, state) {
+                return SingleChildScrollView(
+                    physics: BouncingScrollPhysics(),
+                    child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).viewInsets.bottom),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+                              child: Text(
+                                'Withdraw Amount (Bal: ₦$wallet)',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            error? Container(
+                              //show error message here
+                              margin: EdgeInsets.only(bottom:10),
+                              padding: EdgeInsets.all(10),
+                              child: errmsg(msg, success, context),
+                              //if error == true then show error message
+                              //else set empty container as child
+                            ) : Container(),
+                            Container(
+                              margin: const EdgeInsets.only(top: 10, right: 20, left: 20),
+                              height: 60,
+                              child: SizedBox(
+                                height: 60,
+                                child: TextField(
+                                  keyboardType: TextInputType.number,
+                                  decoration: const InputDecoration(
+                                    hintText: "Amount",
+                                    isDense: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(5.0),
+                                      ),
+                                    ),
+                                  ),
+                                  onChanged: (value){
+                                    amount=value;
+                                  },
+                                ),
+                              ),
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 20, right: 20, left: 20, bottom: 25),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: kPrimary,
+                                    minimumSize: const Size.fromHeight(
+                                        50), // fromHeight use double.infinity as width and 40 is the height
+                                  ),
+                                  child: Text(
+                                    'Withdraw Now',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  onPressed: (){
+                                    if(!showprogress) {
+                                      state(() {
+                                        showprogress = true;
+                                        error = false;
+                                        withdrawNow();
+                                      });
+                                    }
+                                  },
+                                )),
+                            Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 20, right: 20, left: 20, bottom: 25),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.red,
+                                    minimumSize: const Size.fromHeight(
+                                        50), // fromHeight use double.infinity as width and 40 is the height
+                                  ),
+                                  child: Text(
+                                    'Close',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  onPressed: (){
+                                    Navigator.pop(context);
+                                  },
+                                )),
+                          ],
+                        )));
+              });
+        },
+        context: context);
+  }
 
 }

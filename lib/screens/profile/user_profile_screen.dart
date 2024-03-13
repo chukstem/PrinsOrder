@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_app/models/user_model.dart';
@@ -45,7 +43,6 @@ class _UserProfile extends State<UserProfile> {
   String token="", username="", errormsg="";
   bool error=false, showprogress=false, loading=true,  loading2=false, success=false;
   List<TimelineModel> tList = List.empty(growable: true);
-  AudioPlayer audioPlayer = AudioPlayer();
   String currentTime = "0:00:00";
   String completeTime = "0:00:00";
 
@@ -112,36 +109,12 @@ class _UserProfile extends State<UserProfile> {
 
   }
 
-  setPlayer(){
-    audioPlayer.onDurationChanged.listen((Duration duration) {
-      setState(() {
-        completeTime = duration.toString().split(".")[0];
-      });
-
-      audioPlayer.onPositionChanged.listen((Duration duration) {
-        setState(() {
-          currentTime = duration.toString().split(".")[0];
-          if(currentTime==completeTime){
-            for (int i = 0; i < tList.length; i++) {
-              if(tList[i].mediaModel.isNotEmpty) tList[i].mediaModel[0].playingstatus = 0;
-            }
-          }
-        });
-      });
-
-
-    });
-  }
-
-
-
   @override
   void initState() {
     super.initState();
     getuser();
     Timer(Duration(seconds: 1), () =>
     {
-      setPlayer(),
       fetchTimeline(),
     });
   }
@@ -811,75 +784,6 @@ class _UserProfile extends State<UserProfile> {
                         margin: EdgeInsets.only(top: 10, bottom: 10),
                         child: VideoPlayerLib(url: obj.mediaModel[0].url),
                       ) :
-                      obj.mediaModel[0].type.contains("audio") ?
-                      Container(
-                          margin: EdgeInsets.only(top: 10, bottom: 10),
-                          width: 240,
-                          height: 50,
-                          alignment: Alignment.center,
-                          padding: EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: kPrimaryLightColor,
-                            borderRadius: BorderRadius.circular(80),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Center(
-                                child: InkWell(
-                                    child: Icon(
-                                      obj.mediaModel[0].playingstatus==1
-                                          ? Icons.pause_circle_filled
-                                          : Icons.play_circle_filled,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                    onTap: () async {
-                                      if (obj.mediaModel[0].playingstatus==1) {
-                                        audioPlayer.pause();
-                                        setState(() {
-                                          for (int i = 0; i < tList.length; i++) {
-                                            if(tList[i].mediaModel.isNotEmpty) tList[i].mediaModel[0].playingstatus = 0;
-                                          }
-                                        });
-                                      } else {
-                                        await audioPlayer.play(UrlSource(obj.mediaModel[0].url));
-                                        setState(() {
-                                          for (int i = 0; i < tList.length; i++) {
-                                            if(tList[i].mediaModel.isNotEmpty) tList[i].mediaModel[0].playingstatus = 0;
-                                          }
-                                          obj.mediaModel[0].playingstatus = 1;
-                                        });
-                                      }
-                                    }),
-                              ),
-                              Center(
-                                child: InkWell(
-                                  child: Icon(
-                                    Icons.stop,
-                                    color: Colors.white,  size: 25,
-                                  ),
-                                  onTap: () {
-                                    audioPlayer.stop();
-                                    setState(() {
-                                      for (int i = 0; i < tList.length; i++) {
-                                        if(tList[i].mediaModel.isNotEmpty) tList[i].mediaModel[0].playingstatus = 0;
-                                      }
-                                    });
-                                  },
-                                ),
-                              ),
-                              Text(
-                                "   " + currentTime,
-                                style: TextStyle(fontWeight: FontWeight.w700, color: Colors.white),
-                              ),
-                              Text(" | ", style: TextStyle(color: Colors.white)),
-                              Text(
-                                completeTime,
-                                style: TextStyle(fontWeight: FontWeight.w300, color: Colors.white),
-                              ),
-                            ],
-                          )) :
                       SizedBox(),
                       Container(
                         alignment: Alignment.center,
@@ -904,7 +808,7 @@ class _UserProfile extends State<UserProfile> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  obj.isLiked=="1" ? Icon(Icons.heart_broken, color: Colors.red, size: 20,) : Icon(Icons.heart_broken, size: 20,),
+                                  obj.isLiked=="1" ? Icon(Icons.favorite, color: Colors.red, size: 20,) : Icon(Icons.favorite, size: 20,),
                                   SizedBox(width: 5,),
                                   Text(
                                     obj.likes,
@@ -960,7 +864,7 @@ class _UserProfile extends State<UserProfile> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  obj.isLiked=="1" ? Icon(Icons.heart_broken, color: Colors.red, size: 20,) : Icon(Icons.heart_broken, size: 20,),
+                                  obj.isLiked=="1" ? Icon(Icons.favorite, color: Colors.red, size: 20,) : Icon(Icons.favorite, size: 20,),
                                   SizedBox(width: 5,),
                                   Text(
                                     obj.likes,

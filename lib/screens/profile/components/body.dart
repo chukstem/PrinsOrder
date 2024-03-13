@@ -22,7 +22,6 @@ import '../../chat/chat_screen.dart';
 import '../../settings/pin_page.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
 class Body extends StatefulWidget {
@@ -141,14 +140,14 @@ class _Body extends State<Body> {
             text: "Terms of Use",
             icon: "assets/images/policy.svg",
             press: () {
-              _openLink(Strings.url+"/terms-of-use");
+              //_openLink(Strings.url+"/terms-of-use");
             },
           ),
           ProfileMenu(
             text: "Privacy Policy",
             icon: "assets/images/policy.svg",
             press: () {
-              _openLink(Strings.url+"/privacy-policy");
+              //_openLink(Strings.url+"/privacy-policy");
             },
           ),
           ProfileMenu(
@@ -176,6 +175,7 @@ class _Body extends State<Body> {
     Get.offAllNamed(WelcomeScreen.routeName);
   }
 
+  /*
   Future<void> _openLink(String link) async {
     Uri url=Uri.parse(link);
     if (!await launchUrl(
@@ -187,6 +187,8 @@ class _Body extends State<Body> {
       throw Exception('Could not launch $url');
     }
   }
+
+   */
 
   delete(BuildContext context) async{
     QuickAlert.show(

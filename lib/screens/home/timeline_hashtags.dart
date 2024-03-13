@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:audioplayers/audioplayers.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_app/models/timeline_hashtags_model.dart';
@@ -39,7 +38,6 @@ class TimelineHashtags extends StatefulWidget {
 class _TimelineHashtags extends State<TimelineHashtags> {
   String token="", username="", errormsg="";
   bool error=false, loading=true, showprogress=false, success=false;
-  AudioPlayer audioPlayer = AudioPlayer();
   String currentTime = "0:00:00";
   String completeTime = "0:00:00";
 
@@ -96,29 +94,6 @@ class _TimelineHashtags extends State<TimelineHashtags> {
   }
 
 
-   
-  setPlayer(){
-    audioPlayer.onDurationChanged.listen((Duration duration) {
-      setState(() {
-        completeTime = duration.toString().split(".")[0];
-      });
-
-      audioPlayer.onPositionChanged.listen((Duration duration) {
-        setState(() {
-          currentTime = duration.toString().split(".")[0];
-          if(currentTime==completeTime){
-            for (int i = 0; i < list.length; i++) {
-              if(list.first.timeline![i].mediaModel.isNotEmpty) list.first.timeline![i].mediaModel[0].playingstatus = 0;
-            }
-          }
-        });
-      });
-
-
-    });
-  }
-
-
 
   @override
   void initState() {
@@ -126,7 +101,6 @@ class _TimelineHashtags extends State<TimelineHashtags> {
     getuser();
     Timer(Duration(seconds: 1), () =>
     {
-      setPlayer(),
       fetch(),
     });
   }
@@ -368,34 +342,7 @@ class _TimelineHashtags extends State<TimelineHashtags> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              Center(
-                                child: InkWell(
-                                    child: Icon(
-                                      obj.mediaModel[0].playingstatus==1
-                                          ? Icons.pause_circle_filled
-                                          : Icons.play_circle_filled,
-                                      color: Colors.white,
-                                      size: 30,
-                                    ),
-                                    onTap: () async {
-                                      if (obj.mediaModel[0].playingstatus==1) {
-                                        audioPlayer.pause();
-                                        setState(() {
-                                          for (int i = 0; i < list.length; i++) {
-                                            if(list.first.timeline![i].mediaModel.isNotEmpty) list.first.timeline![i].mediaModel[0].playingstatus = 0;
-                                          }
-                                        });
-                                      } else {
-                                        await audioPlayer.play(UrlSource(obj.mediaModel[0].url));
-                                        setState(() {
-                                          for (int i = 0; i < list.length; i++) {
-                                            if(list.first.timeline![i].mediaModel.isNotEmpty) list.first.timeline![i].mediaModel[0].playingstatus = 0;
-                                          }
-                                          obj.mediaModel[0].playingstatus = 1;
-                                        });
-                                      }
-                                    }),
-                              ),
+
                               Center(
                                 child: InkWell(
                                   child: Icon(
@@ -403,7 +350,6 @@ class _TimelineHashtags extends State<TimelineHashtags> {
                                     color: Colors.white,  size: 25,
                                   ),
                                   onTap: () {
-                                    audioPlayer.stop();
                                     setState(() {
                                       for (int i = 0; i < list.length; i++) {
                                         if(list.first.timeline![i].mediaModel.isNotEmpty) list.first.timeline![i].mediaModel[0].playingstatus = 0;
@@ -438,7 +384,7 @@ class _TimelineHashtags extends State<TimelineHashtags> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  obj.isLiked=="1" ? Icon(Icons.heart_broken, color: Colors.red, size: 20,) : Icon(Icons.heart_broken, size: 20,),
+                                  obj.isLiked=="1" ? Icon(Icons.favorite, color: Colors.red, size: 20,) : Icon(Icons.favorite, size: 20,),
                                   SizedBox(width: 5,),
                                   Text(
                                     obj.likes,

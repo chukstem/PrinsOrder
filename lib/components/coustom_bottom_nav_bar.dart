@@ -180,7 +180,7 @@ class _Dashboard  extends State<Dashboard> {
 
   Future<void> _refresh() async {
     if(mounted) _timer=Timer.periodic(new Duration(seconds: 5), (timer) {
-      if(!refresh) process();
+      if(!refresh && mounted) process();
     });
   }
 
@@ -195,12 +195,83 @@ class _Dashboard  extends State<Dashboard> {
     });
     try{
       var old_post = json.decode(prefs.getString("queued_posts")!) as List<dynamic>;
+      var jsondata=null;
       for(var post in old_post) {
         bool isPosted=false;
         try{
           String apiurl = Strings.url + post["url"].toString();
           var response = null;
-          if(post["url"]=="/post_conversation_image"){
+
+          if(post["url"]=="/post_timeline"){
+            var uri = Uri.parse(apiurl);
+            var request = http.MultipartRequest("POST", uri);
+            List<http.MultipartFile> newList = [];
+
+            //upload images
+            try{
+              var files=json.decode(post["var1"].toString());
+              for(var file in files) {
+                var js = json.decode(jsonEncode(file["images"]));
+                var images = js as List<dynamic>;
+                int i=0;
+                for (var img in images) {
+                  i++;
+                  String fileName = File(img["url"]).path.split("/").last;
+                  var stream = new http.ByteStream(DelegatingStream.typed(File(img["url"]).openRead()));
+                  var length = await File(img["url"]).length();
+                  var multipartFileSign = new http.MultipartFile('images[$i]', stream, length, filename: fileName);
+                  newList.add(multipartFileSign);
+                }
+                request.files.addAll(newList);
+              }
+            }catch(e){ }
+
+
+            //upload video
+            try{
+              var files=json.decode(post["var1"].toString());
+              for(var file in files) {
+                if (file["video"]!="") {
+                  var stream = http.ByteStream(
+                      DelegatingStream.typed(File(file["video"]).openRead()));
+                  var length = await File(file["video"]).length();
+                  var multipartFile = http.MultipartFile(
+                      "video", stream, length,
+                      filename: File(file["video"]).path.split('/').last);
+                  newList.add(multipartFile);
+                }
+                request.files.addAll(newList);
+              }
+            }catch(e){ }
+
+
+            request.headers['Content-Type'] = 'application/json';
+            request.headers['Authentication'] = '$token';
+            request.fields['username'] = '$username';
+            request.fields['price'] = post["user"];
+            request.fields['content'] = post["content"];
+            request.fields['uid'] = post["uid"];
+
+            var respond = await request.send();
+            if (respond.statusCode == 200) {
+              var responseData = await respond.stream.toBytes();
+              var responseString = String.fromCharCodes(responseData);
+              jsondata = json.decode(responseString);
+              if (jsondata["status"].toString() == "success") {
+                isPosted=true;
+                Snackbar().show(context, ContentType.success, "Success!!", jsondata["response_message"]);
+              } else {
+                isPosted=true;
+                Snackbar().show(context, ContentType.failure, "Error!!", jsondata["response_message"]);
+              }
+            } else {
+              isPosted=false;
+            }
+
+
+
+
+          }else if(post["url"]=="/post_conversation_image"){
 
             var uri = Uri.parse(apiurl);
             var request = http.MultipartRequest("POST", uri);
@@ -273,18 +344,20 @@ class _Dashboard  extends State<Dashboard> {
 
         }catch(e){
           isPosted=false;
-         // Snackbar().show(context, ContentType.failure, "Error!!", e.toString());
+          Snackbar().show(context, ContentType.failure, "Error!!", "Network connection error");
         }
 
-        if(!isPosted && post["retries"]<5){
-          posts.add(Post(user: post["user"], content: post["content"], url: post["url"], var1: post["var1"], retries: post["retries"]+1, uid: post["uid"]));
+        if(!isPosted && post["retries"]<2){
+          //posts.add(Post(user: post["user"], content: post["content"], url: post["url"], var1: post["var1"], retries: post["retries"]+1, uid: post["uid"]));
         }
       }
       prefs.setString("queued_posts", jsonEncode(posts));
 
     }catch(e){
-      //Snackbar().show(context, ContentType.failure, "Error!!", e.toString());
+    // Snackbar().show(context, ContentType.failure, "Error!!", e.toString());
     }
+
+
     if(mounted) setState(() {
       refresh=false;
     });

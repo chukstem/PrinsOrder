@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:crypto_app/models/timeline_model.dart';
 import 'package:crypto_app/screens/explore/video_player.dart';
@@ -56,8 +55,7 @@ class _ViewTimelineScreen extends State<ViewTimelineScreen> {
   final pageIndexNotifier = ValueNotifier<int>(0);
 
   Bills? currency;
-  List<Bills> currencies=Products().getCurrencies(); 
-  AudioPlayer audioPlayer = AudioPlayer(); 
+  List<Bills> currencies=Products().getCurrencies();
   String currentTime = "0:00:00";
   String completeTime = "0:00:00";
 
@@ -174,25 +172,6 @@ class _ViewTimelineScreen extends State<ViewTimelineScreen> {
   }
 
 
-  setPlayer(){
-    audioPlayer.onDurationChanged.listen((Duration duration) {
-      setState(() {
-        completeTime = duration.toString().split(".")[0];
-      });
-
-    audioPlayer.onPositionChanged.listen((Duration duration) {
-      setState(() {
-        currentTime = duration.toString().split(".")[0];
-        if(currentTime==completeTime){
-          for (int i = 0; i < tList.length; i++) {
-            if(tList[i].mediaModel.isNotEmpty) tList[i].mediaModel[0].playingstatus = 0;
-          }
-        }
-      });
-    });
-
-    });
-  }
 
   @override
   void initState() {
@@ -200,7 +179,6 @@ class _ViewTimelineScreen extends State<ViewTimelineScreen> {
     getuser();
     Timer(Duration(seconds: 1), () =>
     {
-      setPlayer(),
       fetchTimeline(),
     });
   }
@@ -402,40 +380,11 @@ class _ViewTimelineScreen extends State<ViewTimelineScreen> {
                                         children: <Widget>[
                                           Center(
                                             child: InkWell(
-                                                child: Icon(
-                                                  widget.model.mediaModel[0].playingstatus==1
-                                                      ? Icons.pause_circle_filled
-                                                      : Icons.play_circle_filled,
-                                                  color: Colors.white,
-                                                  size: 30,
-                                                ),
-                                                onTap: () async {
-                                                  if (widget.model.mediaModel[0].playingstatus==1) {
-                                                    audioPlayer.pause();
-                                                    setState(() {
-                                                      for (int i = 0; i < tList.length; i++) {
-                                                        if(tList[i].mediaModel.isNotEmpty) tList[i].mediaModel[0].playingstatus = 0;
-                                                      }
-                                                    });
-                                                  } else {
-                                                    await audioPlayer.play(UrlSource(widget.model.mediaModel[0].url));
-                                                    setState(() {
-                                                      for (int i = 0; i < tList.length; i++) {
-                                                        if(tList[i].mediaModel.isNotEmpty) tList[i].mediaModel[0].playingstatus = 0;
-                                                      }
-                                                      widget.model.mediaModel[0].playingstatus = 1;
-                                                    });
-                                                  }
-                                                }),
-                                          ),
-                                          Center(
-                                            child: InkWell(
                                               child: Icon(
                                                 Icons.stop,
                                                 color: Colors.white,  size: 25,
                                               ),
                                               onTap: () {
-                                                audioPlayer.stop();
                                                 setState(() {
                                                   for (int i = 0; i < tList.length; i++) {
                                                     if(tList[i].mediaModel.isNotEmpty) tList[i].mediaModel[0].playingstatus = 0;
@@ -479,7 +428,7 @@ class _ViewTimelineScreen extends State<ViewTimelineScreen> {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              widget.model.isLiked=="1" ? Icon(Icons.heart_broken, color: Colors.red, size: 20,) : Icon(Icons.heart_broken, size: 20,),
+                                              widget.model.isLiked=="1" ? Icon(Icons.favorite, color: Colors.red, size: 20,) : Icon(Icons.favorite, size: 20,),
                                               SizedBox(width: 5,),
                                               Text(
                                                 widget.model.likes,
@@ -566,7 +515,7 @@ class _ViewTimelineScreen extends State<ViewTimelineScreen> {
                                           child: Row(
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: [
-                                              widget.model.isLiked=="1" ? Icon(Icons.heart_broken, color: Colors.red, size: 20,) : Icon(Icons.heart_broken, size: 20,),
+                                              widget.model.isLiked=="1" ? Icon(Icons.favorite, color: Colors.red, size: 20,) : Icon(Icons.favorite, size: 20,),
                                               SizedBox(width: 5,),
                                               Text(
                                                 widget.model.likes,
@@ -981,7 +930,7 @@ class _ViewTimelineScreen extends State<ViewTimelineScreen> {
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      obj.isLiked=="1" ? Icon(Icons.heart_broken, color: Colors.red, size: 20,) : Icon(Icons.heart_broken, size: 20,),
+                                      obj.isLiked=="1" ? Icon(Icons.favorite, color: Colors.red, size: 20,) : Icon(Icons.favorite, size: 20,),
                                       SizedBox(width: 5,),
                                       Text(
                                         obj.likes,

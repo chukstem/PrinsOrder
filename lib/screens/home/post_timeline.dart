@@ -1,25 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:async/async.dart';
-import 'package:audioplayers/audioplayers.dart';
+import 'package:chunked_uploader/chunked_uploader.dart';
 import 'package:device_info/device_info.dart';
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:crypto_app/models/timeline_images_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:http/http.dart' as http;
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
-import 'package:video_player/video_player.dart';
 import 'package:uuid/uuid.dart';
 import '../../constants.dart';
 import '../../models/post.dart';
-import '../../strings.dart';
 import '../../widgets/appbar.dart';
 import '../../widgets/snackbar.dart';
 import '../explore/ImageView.dart';
@@ -35,7 +30,6 @@ class _NewPostState extends State<NewPost> {
   String content="", videoPath="", audioPath="", price="";
   final controller = TextEditingController();
   List<TimelineImagesModel> images = List.empty(growable: true);
-  AudioPlayer audioPlayer = AudioPlayer();
   String currentTime = "0:00:00";
   String completeTime = "0:00:00", errormsg="";
   int playingstatus=0;
@@ -46,25 +40,10 @@ class _NewPostState extends State<NewPost> {
     return androidInfo.version.sdkInt;
   }
 
-  setPlayer(){
-    audioPlayer.onDurationChanged.listen((Duration duration) {
-      setState(() {
-        completeTime = duration.toString().split(".")[0];
-      });
 
-      audioPlayer.onPositionChanged.listen((Duration duration) {
-        setState(() {
-          currentTime = duration.toString().split(".")[0];
-          if(currentTime==completeTime){
-            playingstatus = 0;
-          }
-        });
-      });
-
-    });
-  }
 
   post() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (content.isNotEmpty) {
     String path="";
     if(audioPath.isNotEmpty) {
@@ -94,11 +73,13 @@ class _NewPostState extends State<NewPost> {
     });
 
 
-    final Post posts = new Post(user: "$price", content: "$content", url: "/post_timeline", var1: "$path", retries: 0,
-        uid: Uuid().v4());
+    List<Post> posts = List.empty(growable: true);
+    posts.add(Post(user: "$price", content: "$content", url: "/post_timeline", var1: "$path", retries: 0,
+        uid: Uuid().v4()));
 
-    upload(posts, context);
-
+    prefs.setString("queued_posts", jsonEncode(posts));
+     Toast.show("Uploading post...", duration: Toast.lengthLong, gravity: Toast.bottom);
+     Navigator.of(context).pop();
     }else{
       Snackbar().show(context, ContentType.failure, "Error!", "Post body can not be empty");
     }
@@ -107,134 +88,11 @@ class _NewPostState extends State<NewPost> {
 
   final ImagePicker _picker = ImagePicker();
 
-  Future upload(Post post, BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? token=prefs.getString("token");
-    String? username=prefs.getString("username");
-
-    try{
-      var uri = Uri.parse(Strings.url + "/post_timeline");
-
-      QuickAlert.show(
-        barrierDismissible: false,
-        context: context,
-        type: QuickAlertType.loading,
-        title: 'Processing',
-        text: 'Uploading Post...',
-      );
-    var request = http.MultipartRequest("POST", uri);
-    List<http.MultipartFile> newList = [];
-
-    //upload images
-    try{
-      var files=json.decode(post.var1.toString());
-      for(var file in files) {
-        var js = json.decode(jsonEncode(file["images"]));
-        var images = js as List<dynamic>;
-        int i=0;
-        for (var img in images) {
-          i++;
-          String fileName = File(img["url"]).path.split("/").last;
-          var stream = new http.ByteStream(DelegatingStream.typed(File(img["url"]).openRead()));
-          var length = await File(img["url"]).length();
-          var multipartFileSign = new http.MultipartFile('images[$i]', stream, length, filename: fileName);
-          newList.add(multipartFileSign);
-        }
-        request.files.addAll(newList);
-      }
-    }catch(e){ }
-
-    //upload audio
-    try{
-      var files=json.decode(post.var1.toString());
-      for(var file in files){
-        if(file["audio"]!=""){
-          var stream = http.ByteStream(
-              DelegatingStream.typed(File(file["audio"]).openRead()));
-          var length = await File(file["audio"]).length();
-          var multipartFile = http.MultipartFile(
-              "audio", stream, length, filename: File(file["audio"]).path.split('/').last);
-          newList.add(multipartFile);
-        }
-        request.files.addAll(newList);
-      }
-    }catch(e){ }
-
-    //upload video
-    try{
-      var files=json.decode(post.var1.toString());
-      for(var file in files) {
-        if (file["video"]!="") {
-          var stream = http.ByteStream(
-              DelegatingStream.typed(File(file["video"]).openRead()));
-          var length = await File(file["video"]).length();
-          var multipartFile = http.MultipartFile(
-              "video", stream, length,
-              filename: File(file["video"]).path.split('/').last);
-          newList.add(multipartFile);
-        }
-        request.files.addAll(newList);
-      }
-    }catch(e){ }
-
-
-    request.headers['Content-Type'] = 'application/json';
-    request.headers['Authentication'] = '$token';
-    request.fields['username'] = '$username';
-    request.fields['price'] = post.user;
-    request.fields['content'] = post.content;
-    request.fields['uid'] = post.uid;
-
-    var respond = await request.send();
-    if (respond.statusCode == 200) {
-      var responseData = await respond.stream.toBytes();
-      var responseString = String.fromCharCodes(responseData);
-      var jsondata = json.decode(responseString);
-      if (jsondata["status"].toString() == "success") {
-        setState(() {
-          error = false;
-          errormsg = jsondata["response_message"];
-        });
-      } else {
-        setState(() {
-          error = true;
-          errormsg = jsondata["response_message"];
-        });
-      }
-    } else {
-      setState(() {
-        error = true;
-        errormsg = "Connection error. Try again ${respond.statusCode}";
-      });
-    }
-    } catch (e) {
-      setState(() {
-        error = true;
-        errormsg = e.toString() + "Connection error. Try again";
-      });
-    }
-
-    if(error!) {
-      Snackbar().show(context, ContentType.failure, "Error!", errormsg!);
-    }else{
-      Snackbar().show(context, ContentType.success, "Success!", errormsg!);
-    }
-    Navigator.pop(context);
-    Navigator.pop(context);
-
-  }
-
-
-
 
 
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 1), () =>
-    {
-      setPlayer(),
-    });
   }
 
   @override
@@ -359,29 +217,7 @@ class _NewPostState extends State<NewPost> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Center(
-                    child: InkWell(
-                        child: Icon(
-                          playingstatus==1
-                              ? Icons.pause_circle_filled
-                              : Icons.play_circle_filled,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                        onTap: () async {
-                          if (playingstatus==1) {
-                            audioPlayer.pause();
-                            setState(() {
-                              playingstatus = 0;
-                            });
-                          } else {
-                            await audioPlayer.play(UrlSource(audioPath));
-                            setState(() {
-                             playingstatus = 1;
-                            });
-                          }
-                        }),
-                  ),
+
                   Center(
                     child: InkWell(
                       child: Icon(
@@ -389,7 +225,6 @@ class _NewPostState extends State<NewPost> {
                         color: Colors.white,  size: 25,
                       ),
                       onTap: () {
-                        audioPlayer.stop();
                         setState(() {
                            playingstatus = 0;
                         });
